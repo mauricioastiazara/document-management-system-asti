@@ -1,4 +1,3 @@
-const fs = require('node:fs');
 const documentsRepository = require('../repositories/documents.repository');
 
 function toPublicDocument(document) {
@@ -24,18 +23,15 @@ function listDocuments(ownerId) {
 }
 
 function getDownloadDocument(id, ownerId) {
-  const document = documentsRepository.findByIdAndOwner(id, ownerId);
-
-  if (!document) {
+  const download = documentsRepository.findDownloadByIdAndOwner(id, ownerId);
+  if (!download) {
     return null;
   }
 
-  const filePath = documentsRepository.getFilePath(document);
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-
-  return { document: toPublicDocument(document), filePath };
+  return {
+    document: toPublicDocument(download.document),
+    filePath: download.filePath,
+  };
 }
 
 module.exports = { createDocument, listDocuments, getDownloadDocument };
