@@ -13,3 +13,5 @@ frontend/build/
 *.log
 .DS_Store
 .env
+backend/package-lock.json
+frontend/package-lock.json
