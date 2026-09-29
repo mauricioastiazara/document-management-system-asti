@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const fs = require('node:fs');
 const path = require('node:path');
 
 const documents = new Map();
@@ -23,4 +24,19 @@ function getFilePath(document) {
   return path.join(storageDirectory, document.storedName);
 }
 
-module.exports = { create, findAllByOwner, findByIdAndOwner, getFilePath };
+function findDownloadByIdAndOwner(id, ownerId) {
+  const document = findByIdAndOwner(id, ownerId);
+
+  if (!document) {
+    return null;
+  }
+
+  const filePath = getFilePath(document);
+  return fs.existsSync(filePath) ? { document, filePath } : null;
+}
+
+module.exports = {
+  create,
+  findAllByOwner,
+  findDownloadByIdAndOwner,
+};
